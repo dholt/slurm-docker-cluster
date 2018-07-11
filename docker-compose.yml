@@ -76,6 +76,40 @@ services:
     environment:
       NVIDIA_VISIBLE_DEVICES: 1
 
+  c3:
+    image: slurm-docker-cluster:17.11.7
+    command: ["slurmd"]
+    hostname: c3
+    container_name: c3
+    volumes:
+      - etc_munge:/etc/munge
+      - etc_slurm:/etc/slurm
+      - slurm_jobdir:/data
+      - var_log_slurm:/var/log/slurm
+    expose:
+      - "6818"
+    depends_on:
+      - "slurmctld"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: 2
+
+  c4:
+    image: slurm-docker-cluster:17.11.7
+    command: ["slurmd"]
+    hostname: c4
+    container_name: c4
+    volumes:
+      - etc_munge:/etc/munge
+      - etc_slurm:/etc/slurm
+      - slurm_jobdir:/data
+      - var_log_slurm:/var/log/slurm
+    expose:
+      - "6818"
+    depends_on:
+      - "slurmctld"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: 3
+
 volumes:
   etc_munge:
   etc_slurm:
