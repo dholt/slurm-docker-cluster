@@ -14,7 +14,7 @@ services:
       - var_lib_mysql:/var/lib/mysql
 
   slurmdbd:
-    image: slurm-docker-cluster:17.02.10
+    image: slurm-docker-cluster:17.11.7
     command: ["slurmdbd"]
     container_name: slurmdbd
     hostname: slurmdbd
@@ -28,7 +28,7 @@ services:
       - mysql
 
   slurmctld:
-    image: slurm-docker-cluster:17.02.10
+    image: slurm-docker-cluster:17.11.7
     command: ["slurmctld"]
     container_name: slurmctld
     hostname: slurmctld
@@ -43,7 +43,7 @@ services:
       - "slurmdbd"
 
   c1:
-    image: slurm-docker-cluster:17.02.10
+    image: slurm-docker-cluster:17.11.7
     command: ["slurmd"]
     hostname: c1
     container_name: c1
@@ -56,9 +56,11 @@ services:
       - "6818"
     depends_on:
       - "slurmctld"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: 0
 
   c2:
-    image: slurm-docker-cluster:17.02.10
+    image: slurm-docker-cluster:17.11.7
     command: ["slurmd"]
     hostname: c2
     container_name: c2
@@ -71,6 +73,8 @@ services:
       - "6818"
     depends_on:
       - "slurmctld"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: 1
 
 volumes:
   etc_munge:
@@ -78,3 +82,10 @@ volumes:
   slurm_jobdir:
   var_lib_mysql:
   var_log_slurm:
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/24
